@@ -3,6 +3,7 @@ package com.example.uniquefinder.controller;
 import com.example.uniquefinder.model.RequestDetailsDTO;
 import com.example.uniquefinder.model.RequestDetailsResponse;
 import com.example.uniquefinder.service.UniqueService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Nonnull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,11 +23,13 @@ public class UniqueController {
         this.uniqueService = uniqueService;
     }
 
+    @Operation(summary = "Egyedi fájlok keresése a megadott könyvtárban.")
     @GetMapping("/unique-files")
     public ResponseEntity<RequestDetailsResponse> getUniqueFiles(@RequestParam @Nonnull String path) {
         return uniqueService.getUniqueFiles(new File(path));
     }
 
+    @Operation(summary = "Korábbi keresések részleteinek lekérése.")
     @GetMapping("/history")
     public Page<RequestDetailsDTO> getHistory(Pageable pageable) {
         return uniqueService.getHistory(pageable);
