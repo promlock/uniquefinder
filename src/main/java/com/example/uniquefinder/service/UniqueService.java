@@ -47,7 +47,7 @@ public class UniqueService {
     }
 
     private void checkContent(File file) {
-        if (file != null)
+        if (file != null && file.listFiles() != null)
             for (File f : file.listFiles()) {
                 checkUniqueness(f);
             }
