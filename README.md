@@ -1,32 +1,33 @@
-# Egyedi fájlnév kereső alkalmazás
+# Unique File Name Search Application
 
-## Leírás
-Ez a projekt egy egyszerű API-t kínál a felhasználóknak, hogy egyedi fájlokat keressenek egy megadott könyvtárban, valamint lekérjék korábbi kereséseik részleteit. Az API használata rendkívül egyszerű, és lehetővé teszi a fájlok egyediségének ellenőrzését a megadott könyvtárban.
+## Description
+This project offers a simple API for users to search for unique files in a specified directory and retrieve details of their previous searches. The API is straightforward to use and allows for checking the uniqueness of files in the provided directory.
 
-## Futtatás
+## Running
 
-- Az alkalmazás forráskódja a GitHub-on található.
+- The source code of the application is available on GitHub:
 - https://github.com/promlock/uniquefinder
-- Az alkalmazásból képfájl is készül, amely alább érhető el:
+
+- An image file of the application is also available here:
 - https://hub.docker.com/repository/docker/kovacsp22/uniquefinder/general
 
-- Az alaklmazás pull után a make paranccsal indítható. 2 példányban indul, amelyek itt érhetőek el:
-- http://localhost:8080/swagger-ui/index.html
-- http://localhost:8080/swagger-ui/index.html
+- After pulling the application, you can start it using the make command. It runs in two instances, which can be accessed here:
+- http://localhost:8081/swagger-ui/index.html
+- http://localhost:8082/swagger-ui/index.html
 
 
-## Végpontok
+## Endpoints
 
-Az API két fő végpontot kínál:
+The API offers two main endpoints:
 
 ### /unique-files
-- Leírás: Ezen a végponton keresztül a felhasználók megadhatnak egy könyvtár elérési útvonalat, és az API ellenőrzi a könyvtárban található fájlok egyediségét.
-- HTTP metódus: GET
-- Példa hívás: GET /unique-files?path=/path/to/directory
-- Válasz: A válasz tartalmazza a keresett könyvtárban található egyedi fájlok listáját.
+- Description: Through this endpoint, users can specify a directory path, and the API checks for the uniqueness of files in that directory.
+- HTTP method: GET
+- Example call: GET /unique-files?path=/path/to/directory
+- Response: The response includes a list of unique files found in the specified directory.
 
 ### /history
-- Leírás: Ezen a végponton keresztül a felhasználók lekérhetik a korábbi kereséseik részleteit, beleértve a keresési időpontot, a felhasználó nevét és a keresett könyvtár elérési útvonalát.
-- HTTP metódus: GET
-- Példa hívás: GET /history?page=1&size=10
-- Válasz: A válasz tartalmazza a korábbi keresések részleteit oldalazva.
+- Description: Through this endpoint, users can retrieve details of their previous searches, including the search timestamp, user name, and the directory path they searched for.
+- HTTP method: GET
+- Example call: GET /history?page=1&size=10
+- Response: The response includes details of previous searches paginated.
