@@ -10,13 +10,13 @@ image:
 	@echo
 	@echo "create image"
 	@echo
-	podman build -t uniquefinder .
+	podman build -t uniquefinderlocal .
 
 pod:
 	@echo
 	@echo "create pod"
 	@echo
-	podman pod create -p 8081:8080 --name uniquepod
+	podman pod create -p 8081:8081 -p 8082:8082 --name uniquepod
 
 database:
 	@echo
@@ -28,7 +28,8 @@ apps:
 	@echo
 	@echo "create apps"
 	@echo
-	podman run --name uniquefinder -d --pod uniquepod docker.io/kovacsp22/uniquefinder
+	podman run --name uniquefinder1 --env PORT=8081 --pod uniquepod -d uniquefinderlocal
+	podman run --name uniquefinder2 --env PORT=8082 --pod uniquepod -d uniquefinderlocal
 
 clean:
 	@echo
