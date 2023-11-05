@@ -19,6 +19,7 @@ import java.util.Set;
 @Service
 public class UniqueService {
 
+    // Set to store unique file names
     private Set<String> uniqueFileSet;
     private final RequestDetailsRepository detailsRepository;
 
@@ -28,16 +29,21 @@ public class UniqueService {
     }
 
 
+    // Method to get unique files within a directory and save request details
     public ResponseEntity<RequestDetailsResponse> getUniqueFiles(File file) {
         uniqueFileSet = new HashSet<>();
         saveRequestDetails(file);
+
+        // Check if the provided file is a valid directory
         if (!file.exists() || !file.isDirectory())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RequestDetailsResponse("The given path does not exist or is not a directory."));
 
+        // Check for uniqueness of files within the directory
         checkUniqueness(file);
         return ResponseEntity.status(HttpStatus.OK).body(new RequestDetailsResponse(file.getPath(), uniqueFileSet));
     }
 
+    // Recursive method to check the uniqueness of files
     private void checkUniqueness(File file) {
         if (file.isDirectory())
             checkContent(file);
@@ -46,6 +52,7 @@ public class UniqueService {
             uniqueFileSet.add(file.getName());
     }
 
+    // Recursive method to check the content of a directory
     private void checkContent(File file) {
         if (file != null && file.listFiles() != null)
             for (File f : file.listFiles()) {
@@ -53,10 +60,12 @@ public class UniqueService {
             }
     }
 
+    // Method to save request details to the repository
     private void saveRequestDetails(File file) {
         detailsRepository.save(new RequestDetails(file.getPath(), System.getProperty("user.name")));
     }
 
+    // Method to retrieve a paginated history of request details
     public Page<RequestDetailsDTO> getHistory(Pageable pageable) {
         return detailsRepository.findAll(pageable)
                 .map(t -> new RequestDetailsDTO(t.getFolder(), t.getUserName(), t.getRequestDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
