@@ -1,10 +1,4 @@
-all: build image pod database apps
-
-build:
-	@echo
-	@echo "build app"
-	@echo
-	./mvnw clean package
+all: image pod database apps
 
 image:
 	@echo
