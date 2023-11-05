@@ -11,9 +11,11 @@ This project offers a simple API for users to search for unique files in a speci
 - An image file of the application is also available here:
 - https://hub.docker.com/repository/docker/kovacsp22/uniquefinder/general
 
-- After pulling the application, you can start it using the make command. It runs in two instances, which can be accessed here:
+- After pulling the application, you can start it using the 'make' command. It runs in two instances, which can be accessed here:
 - http://localhost:8081/swagger-ui/index.html
 - http://localhost:8082/swagger-ui/index.html
+
+- After usage 'make clean' command available to stop pod and remove containers.
 
 
 ## Endpoints
