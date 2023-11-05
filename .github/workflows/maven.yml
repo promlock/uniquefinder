@@ -1,20 +1,22 @@
 name: Java CI with Maven
 
+# Specify when to trigger the workflow
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]  # Trigger when pushing to the main branch
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ]  # Trigger when creating pull requests to the main branch
 
 jobs:
 
   build:
-
+    # Specify the runner environment (GitHub-hosted runner)
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
 
+      # Set up Java Development Kit (JDK) version 17
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -22,15 +24,17 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+      # Build the project using Apache Maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
+      # Build a Docker image and push it to Docker Hub
     - name: Build & push Docker image
       uses: mr-smithers-excellent/docker-build-push@v6
       with:
-          image: kovacsp22/uniquefinder
+          image: kovacsp22/uniquefinder   # Specify the Docker image name
           tags: latest
-          registry: docker.io
+          registry: docker.io   # Docker Hub registry
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
