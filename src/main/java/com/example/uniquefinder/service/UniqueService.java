@@ -16,20 +16,38 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Service class for handling unique file search operations and managing request details.
+ */
 @Service
 public class UniqueService {
 
-    // Set to store unique file names
+    /**
+     * Set to store unique file names.
+     */
     private Set<String> uniqueFileSet;
+
+    /**
+     * Repository for storing and retrieving request details.
+     */
     private final RequestDetailsRepository detailsRepository;
 
-
+    /**
+     * Constructor to initialize the service with a RequestDetailsRepository.
+     *
+     * @param detailsRepository The repository for storing and retrieving request details.
+     */
     public UniqueService(RequestDetailsRepository detailsRepository) {
         this.detailsRepository = detailsRepository;
     }
 
 
-    // Method to get unique files within a directory and save request details
+    /**
+     * Method to get unique files within a directory and save request details.
+     *
+     * @param file The directory to search for unique files.
+     * @return A ResponseEntity containing the response with unique file details or an error message.
+     */
     public ResponseEntity<RequestDetailsResponse> getUniqueFiles(File file) {
         uniqueFileSet = new HashSet<>();
         saveRequestDetails(file);
@@ -43,7 +61,11 @@ public class UniqueService {
         return ResponseEntity.status(HttpStatus.OK).body(new RequestDetailsResponse(file.getPath(), uniqueFileSet));
     }
 
-    // Recursive method to check the uniqueness of files
+    /**
+     * Recursive method to check the uniqueness of files within a directory.
+     *
+     * @param file The directory or file to check for uniqueness.
+     */
     private void checkUniqueness(File file) {
         if (file.isDirectory())
             checkContent(file);
@@ -52,7 +74,11 @@ public class UniqueService {
             uniqueFileSet.add(file.getName());
     }
 
-    // Recursive method to check the content of a directory
+    /**
+     * Recursive method to check the content of a directory.
+     *
+     * @param file The directory to check the content of.
+     */
     private void checkContent(File file) {
         if (file != null && file.listFiles() != null)
             for (File f : file.listFiles()) {
@@ -60,12 +86,21 @@ public class UniqueService {
             }
     }
 
-    // Method to save request details to the repository
+    /**
+     * Method to save request details to the repository.
+     *
+     * @param file The file or directory for which request details are saved.
+     */
     private void saveRequestDetails(File file) {
         detailsRepository.save(new RequestDetails(file.getPath(), System.getProperty("user.name")));
     }
 
-    // Method to retrieve a paginated history of request details
+    /**
+     * Method to retrieve a paginated history of request details.
+     *
+     * @param pageable The Pageable object to specify pagination options.
+     * @return A Page containing request details in a DTO format.
+     */
     public Page<RequestDetailsDTO> getHistory(Pageable pageable) {
         return detailsRepository.findAll(pageable)
                 .map(t -> new RequestDetailsDTO(t.getFolder(), t.getUserName(), t.getRequestDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
