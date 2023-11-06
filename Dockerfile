@@ -10,5 +10,6 @@ RUN ./mvnw dependency:go-offline
 COPY src ./src
 RUN  ./mvnw clean package
 
+RUN cp target/*.jar app.jar
 ENV PORT=8080
-ENTRYPOINT ["java", "-jar", "-Dserver.port=${PORT}", "/app/target/uniquefinder-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "-Dserver.port=${PORT}", "app.jar"]
