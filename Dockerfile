@@ -11,5 +11,10 @@ COPY src ./src
 RUN  ./mvnw clean package
 
 RUN cp target/*.jar app.jar
+
+ARG USER=default_user
+RUN adduser -D ${USER}
+USER ${USER}
+
 ENV PORT=8080
 ENTRYPOINT ["java", "-jar", "-Dserver.port=${PORT}", "app.jar"]

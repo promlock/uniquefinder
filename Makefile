@@ -4,7 +4,8 @@ image:
 	@echo
 	@echo "create image"
 	@echo
-	podman build -t uniquefinderlocal .
+    podman build -t uniquefinderlocal1 --build-arg USER=user8081 .
+	podman build -t uniquefinderlocal2 --build-arg USER=user8082 .
 
 pod:
 	@echo
@@ -22,8 +23,8 @@ apps:
 	@echo
 	@echo "create apps"
 	@echo
-	podman run --name uniquefinder1 --env PORT=8081 --pod uniquepod -d uniquefinderlocal
-	podman run --name uniquefinder2 --env PORT=8082 --pod uniquepod -d uniquefinderlocal
+	podman run --name uniquefinder1 --env PORT=8081 --pod uniquepod -d uniquefinderlocal1
+	podman run --name uniquefinder2 --env PORT=8082 --pod uniquepod -d uniquefinderlocal2
 
 clean:
 	@echo
@@ -31,4 +32,6 @@ clean:
 	@echo
 	podman pod stop uniquepod
 	podman pod rm uniquepod
+	podman rmi uniquefinderlocal1
+	podman rmi uniquefinderlocal2
 
