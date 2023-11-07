@@ -5,7 +5,8 @@ import com.example.uniquefinder.model.RequestDetailsDTO;
 import com.example.uniquefinder.model.RequestDetailsResponse;
 import com.example.uniquefinder.repository.RequestDetailsRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -98,11 +99,15 @@ public class UniqueService {
     /**
      * Method to retrieve a paginated history of request details.
      *
-     * @param pageable The Pageable object to specify pagination options.
+     * @param page           The page number for pagination (0-based).
+     * @param size           The number of items to display per page.
+     * @param sortField      The field by which to sort the results.
+     * @param sortDirection  The direction of sorting (e.g., "ASC" or "DESC").
      * @return A Page containing request details in a DTO format.
      */
-    public Page<RequestDetailsDTO> getHistory(Pageable pageable) {
-        return detailsRepository.findAll(pageable)
+    public Page<RequestDetailsDTO> getHistory(int page, int size, String sortField, String sortDirection) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDirection), sortField));
+        return detailsRepository.findAll(pageRequest)
                 .map(t -> new RequestDetailsDTO(t.getFolder(), t.getUserName(), t.getRequestDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
     }
 

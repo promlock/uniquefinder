@@ -30,6 +30,7 @@ The API offers two main endpoints:
 
 ### /history
 - Description: Through this endpoint, users can retrieve details of their previous searches, including the search timestamp, user name, and the directory path they searched for.
+- As a default setting, pages are returned in reverse chronological order.
 - HTTP method: GET
-- Example call: GET /history?page=1&size=10
+- Example call: GET /history?page=0&size=10&sortField=requestDate&sortDirection=desc
 - Response: The response includes details of previous searches paginated.

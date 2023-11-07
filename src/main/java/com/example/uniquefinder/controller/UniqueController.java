@@ -6,7 +6,6 @@ import com.example.uniquefinder.service.UniqueService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Nonnull;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,12 +48,20 @@ public class UniqueController {
     /**
      * Endpoint for retrieving the history of previous unique file search requests.
      *
-     * @param pageable The Pageable object to specify pagination options for the search history.
+     * @param page           The page number for pagination (0-based).
+     * @param size           The number of items to display per page.
+     * @param sortField      The field by which to sort the results.
+     * @param sortDirection  The direction of sorting (e.g., "ASC" or "DESC").
      * @return A Page containing request details in DTO format.
      */
-    @Operation(summary = "Korábbi keresések részleteinek lekérése.")
+    @Operation(summary = "Endpoint for retrieving the history of previous unique file search requests.")
     @GetMapping("/history")
-    public Page<RequestDetailsDTO> getHistory(Pageable pageable) {
-        return uniqueService.getHistory(pageable);
+    public Page<RequestDetailsDTO> getHistory(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "sortField", defaultValue = "requestDate") String sortField,
+            @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection)
+    {
+        return uniqueService.getHistory(page, size, sortField, sortDirection);
     }
 }
