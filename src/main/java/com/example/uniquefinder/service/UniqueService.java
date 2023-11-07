@@ -51,7 +51,6 @@ public class UniqueService {
      */
     public ResponseEntity<RequestDetailsResponse> getUniqueFiles(File file) {
         uniqueFileSet = new HashSet<>();
-        saveRequestDetails(file);
 
         // Check if the provided file is a valid directory
         if (!file.exists() || !file.isDirectory())
@@ -59,6 +58,7 @@ public class UniqueService {
 
         // Check for uniqueness of files within the directory
         checkUniqueness(file);
+        saveRequestDetails(file, uniqueFileSet);
         return ResponseEntity.status(HttpStatus.OK).body(new RequestDetailsResponse(file.getPath(), uniqueFileSet));
     }
 
@@ -91,9 +91,10 @@ public class UniqueService {
      * Method to save request details to the repository.
      *
      * @param file The file or directory for which request details are saved.
+     * @param uniqueFileSet A set of unique file names found during the search.
      */
-    private void saveRequestDetails(File file) {
-        detailsRepository.save(new RequestDetails(file.getPath(), System.getProperty("user.name")));
+    private void saveRequestDetails(File file, Set<String> uniqueFileSet) {
+        detailsRepository.save(new RequestDetails(file.getPath(), System.getProperty("user.name"), uniqueFileSet));
     }
 
     /**
@@ -108,7 +109,11 @@ public class UniqueService {
     public Page<RequestDetailsDTO> getHistory(int page, int size, String sortField, String sortDirection) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDirection), sortField));
         return detailsRepository.findAll(pageRequest)
-                .map(t -> new RequestDetailsDTO(t.getFolder(), t.getUserName(), t.getRequestDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
+                .map(t -> new RequestDetailsDTO(
+                        t.getFolder(),
+                        t.getUserName(),
+                        t.getRequestDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                        t.getFileNames()));
     }
 
 }

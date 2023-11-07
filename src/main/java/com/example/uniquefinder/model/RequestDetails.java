@@ -1,11 +1,10 @@
 package com.example.uniquefinder.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents details of a unique file search request, including the requested folder, user name, and request date.
@@ -36,6 +35,14 @@ public class RequestDetails {
 	private LocalDateTime requestDate;
 
 	/**
+	 * A set of file names found in the specified directory.
+	 */
+	@ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+	@CollectionTable(name = "fileNames", joinColumns = @JoinColumn(name = "request_id"))
+	@Column(name = "file_name", nullable = false)
+	private Set<String> fileNames = new HashSet<>();
+
+	/**
 	 * Default constructor for RequestDetails.
 	 */
 	public RequestDetails() {
@@ -46,12 +53,14 @@ public class RequestDetails {
 	 *
 	 * @param folder   The folder path where the unique file search was performed.
 	 * @param userName The user name associated with the request.
+	 * @param uniqueFileSet A set of unique file names found during the search.
 	 */
-	public RequestDetails(String folder, String userName) {
+	public RequestDetails(String folder, String userName, Set<String> uniqueFileSet) {
 		super();
 		this.folder = folder;
 		this.userName = userName;
 		this.requestDate = LocalDateTime.now();
+		this.fileNames = uniqueFileSet;
 	}
 
 	/**
@@ -118,14 +127,36 @@ public class RequestDetails {
 	}
 
 	/**
+	 * Get the set of file names found in the specified directory.
+	 *
+	 * @return A set of file names.
+	 */
+	public Set<String> getFileNames() {
+		return fileNames;
+	}
+
+	/**
+	 * Set the set of file names found in the specified directory.
+	 *
+	 * @param fileNames A set of file names to set.
+	 */
+	public void setFileNames(Set<String> fileNames) {
+		this.fileNames = fileNames;
+	}
+
+	/**
 	 * Generates a string representation of the RequestDetails object.
 	 *
-	 * @return A string containing the values of id, folder, userName, and requestDate.
+	 * @return A string containing the values of id, folder, userName, requestDate and file names.
 	 */
 	@Override
 	public String toString() {
-		return "RequestDetails [id=" + id + ", folder=" + folder + ", userName=" + userName + ", requestDate="
-				+ requestDate + "]";
+		return "RequestDetails{" +
+				"id=" + id +
+				", folder='" + folder + '\'' +
+				", userName='" + userName + '\'' +
+				", requestDate=" + requestDate +
+				", fileNames=" + fileNames +
+				'}';
 	}
-	
 }
