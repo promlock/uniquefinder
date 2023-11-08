@@ -4,7 +4,7 @@ image:
 	@echo
 	@echo "create image"
 	@echo
-    podman build -t uniquefinderlocal1 --build-arg USER=user8081 .
+	podman build -t uniquefinderlocal1 --build-arg USER=user8081 .
 	podman build -t uniquefinderlocal2 --build-arg USER=user8082 .
 
 pod:
@@ -34,4 +34,3 @@ clean:
 	podman pod rm uniquepod
 	podman rmi uniquefinderlocal1
 	podman rmi uniquefinderlocal2
-

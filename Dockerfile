@@ -8,6 +8,9 @@ RUN chmod +x ./mvnw
 RUN ./mvnw dependency:go-offline
  
 COPY src ./src
+RUN ./mvnw javadoc:javadoc
+RUN cp -a target/site/apidocs/. src/main/resources/static/
+
 RUN  ./mvnw clean package
 
 RUN cp target/*.jar app.jar

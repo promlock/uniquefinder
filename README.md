@@ -3,6 +3,9 @@
 ## Description
 This project offers a simple API for users to search for unique files in a specified directory and retrieve details of their previous searches. The API is straightforward to use and allows for checking the uniqueness of files in the provided directory.
 
+## Documentation
+- Javadoc is generated automatically. It is accessible at http://localhost:8081
+
 ## Running
 
 - The source code of the application is available on GitHub:
