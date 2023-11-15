@@ -3,18 +3,17 @@ RUN apt update && apt install -y systemd
 
 WORKDIR /app
 
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN chmod +x ./mvnw
-RUN ./mvnw dependency:go-offline
+COPY gradle/ gradle
+COPY build.gradle build.gradle
+COPY gradlew/ gradlew
+COPY settings.gradle settings.gradle
 
 COPY src ./src
-RUN ./mvnw javadoc:javadoc
-RUN cp -a target/site/apidocs/. src/main/resources/static/
+RUN ./gradlew javadoc
 
-RUN  ./mvnw clean package
+RUN ./gradlew clean build
 
-RUN cp target/*.jar app.jar
+RUN cp build/libs/uniquefinder-0.0.1-SNAPSHOT.jar app.jar
 
 ARG USER=default_user
 RUN adduser ${USER}
