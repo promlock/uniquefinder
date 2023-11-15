@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java CI with Gradle
 
 # Specify when to trigger the workflow
 on:
@@ -22,11 +22,11 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: maven
+        cache: gradle
 
       # Build the project using Apache Maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: ./gradlew build
 
       # Build a Docker image and push it to Docker Hub
     - name: Build & push Docker image
@@ -37,4 +37,3 @@ jobs:
           registry: docker.io   # Docker Hub registry
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
