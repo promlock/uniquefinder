@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: changes/V1__create_request_details_table.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/V2__create_file_names_table.sql
+      relativeToChangelogFile: true
