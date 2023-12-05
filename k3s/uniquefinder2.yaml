@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uniquefinder2-deployment
+  labels:
+    app: uniquefinder2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uniquefinder2
+  template:
+    metadata:
+      labels:
+        app: uniquefinder2
+    spec:
+      containers:
+      - name: uniquefinder2
+        image: localhost/uniquefinderlocal2
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8082
+        env:
+          - name: PORT
+            value: "8082"
+          - name: DB_HOST
+            value: postgresdb-service

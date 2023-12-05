@@ -1,36 +1,34 @@
-all: image pod database apps
+all: image database apps
 
 image:
 	@echo
 	@echo "create image"
 	@echo
 	podman build -t uniquefinderlocal1 --build-arg USER=user8081 .
-	podman build -t uniquefinderlocal2 --build-arg USER=user8082 .
-
-pod:
-	@echo
-	@echo "create pod"
-	@echo
-	podman pod create -p 8081:8081 -p 8082:8082 --name uniquepod
+#	podman build -t uniquefinderlocal2 --build-arg USER=user8082 .
 
 database:
 	@echo
 	@echo "create database"
 	@echo
-	podman run --name posgres_db -dt --pod uniquepod -e POSTGRES_PASSWORD=postgres docker.io/postgres
+	kubectl apply -f ./k3s/postgresdb.yaml
 
 apps:
 	@echo
 	@echo "create apps"
 	@echo
-	podman run --name uniquefinder1 --env PORT=8081 --pod uniquepod -d uniquefinderlocal1
-	podman run --name uniquefinder2 --env PORT=8082 --pod uniquepod -d uniquefinderlocal2
+	podman save localhost/uniquefinderlocal1 | sudo k3s ctr images import -
+#	podman save localhost/uniquefinderlocal2 | sudo k3s ctr images import -
+	kubectl apply -f ./k3s/uniquefinder1.yaml
+#	kubectl apply -f ./k3s/uniquefinder2.yaml
+	kubectl apply -f ./k3s/service.yaml
+	kubectl get node -o wide
 
 clean:
 	@echo
 	@echo "clean up"
 	@echo
-	podman pod stop uniquepod
-	podman pod rm uniquepod
-	podman rmi uniquefinderlocal1
-	podman rmi uniquefinderlocal2
+	kubectl delete -f ./k3s/postgresdb.yaml
+	kubectl delete -f ./k3s/uniquefinder1.yaml
+#	kubectl delete -f ./k3s/uniquefinder2.yaml
+	kubectl delete -f ./k3s/service.yaml
